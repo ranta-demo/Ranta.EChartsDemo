@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "走";
+}
+@section styles{
+    <style type="text/css">
+        #main-charts {
+            width: 1200px;
+            height: 800px;
+            margin: 0 auto;
+        }
+    </style>
+}
+@section scripts{
+    <script src="https://www.savory.cn/js/echarts/2.2.7/echarts.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=CE6a044283d3759e79887040e3702586&s=1"></script>
+    <script src="http://cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+    <script>
+        $(function () {
+
+            require.config({
+                paths: {
+                    echarts: 'https://www.savory.cn/js/echarts/2.2.7'
+                }
+            });
+            require(
+                 [
+                     'echarts',
+                     'echarts/chart/map',
+                     'echarts/extension/bmap-extension',
+                     'echarts/theme/macarons'
+                 ],
+                 function (echarts, echartsMap, BMapExtension, theme) {
+                     runExample(echarts, echartsMap, BMapExtension, theme);
+                 }
+             );
+        });
+
+        function runExample(echarts, echartsMap, BMapExtension, theme) {
+
+            var domMain = document.getElementById('main-charts');
+
+            var startPoint = {
+                x: 104.114129,
+                y: 37.550339
+            };
+
+            // 初始化地图
+            var BMapExt = new BMapExtension(domMain, BMap, echarts);
+            var map = BMapExt.getMap();
+            var container = BMapExt.getEchartsContainer();
+            var point = new BMap.Point(startPoint.x, startPoint.y);
+            map.centerAndZoom(point, 5);
+            map.enableScrollWheelZoom(true);
+
+            option = {
+                color: ['gold', 'aqua', 'lime'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (v) {
+                        return v[1].replace(':', ' > ');
+                    }
+                },
+                series: [
+                    {
+                        geoCoord: {
+                            '上海': [121.358138, 31.227972],
+
+                            '南京信息工程大学': [118.723845, 32.209304],
+                            '嵊泗东海渔村': [122.509787, 30.71218],
+                            '虎啸峡漂流': [119.523906, 29.743967],
+                            '浙西天池': [119.126669, 30.302204],
+                            '花果山风景区': [119.278096, 34.648745],
+                            '苏马湾海滨浴场': [119.485386, 34.769281],
+                            '阳澄湖': [120.783964, 31.420796],
+
+                            '蜈支洲岛': [109.770938, 18.319929],
+                            '九寨沟风景区': [103.928015, 33.271453],
+                            '桂林漓江风景名胜区': [110.532642, 24.923132],
+                            '敦煌机场': [94.811551, 40.172728],
+                            '喀纳斯景区': [86.710224, 48.530563],
+                            '天山乡': [93.889438, 43.146231],
+                            '伊犁哈萨克自治州': [81.337596, 43.958958],
+                            '拉萨布达拉宫广场': [91.127719, 29.656913],
+                            '张家界国家森林公园': [110.457767, 29.33786],
+                        }
+                    },
+                    {
+                        name: '到过的地方',
+                        type: 'map',
+                        mapType: 'none',
+                        data: [],
+                        markPoint: {
+                            symbol: 'star',
+                            symbolSize: function (v) {
+                                return 10 + v / 10
+                            },
+                            effect: {
+                                show: true,
+                                shadowBlur: 0,
+                                color: 'red'
+                            },
+                            itemStyle: {
+                                normal: {
+                                    label: { show: false }
+                                }
+                            },
+                            data: [
+                                { name: '南京信息工程大学' },
+                                { name: '嵊泗东海渔村' },
+                                { name: '虎啸峡漂流' },
+                                { name: '浙西天池' },
+                                { name: '花果山风景区' },
+                                { name: '苏马湾海滨浴场' },
+                                { name: '阳澄湖' }
+                            ]
+                        }
+                    },
+                    {
+                        name: '上海',
+                        type: 'map',
+                        mapType: 'none',
+                        data: [],
+                        markLine: {
+                            smooth: true,
+                            effect: {
+                                show: true,
+                                scaleSize: 1,
+                                period: 30,
+                                color: '#fff',
+                                shadowBlur: 10
+                            },
+                            itemStyle: {
+                                normal: {
+                                    borderWidth: 1,
+                                    lineStyle: {
+                                        type: 'solid',
+                                        shadowBlur: 10
+                                    }
+                                }
+                            },
+                            data: [
+                                [{ name: '上海' }, { name: '蜈支洲岛' }],
+                                [{ name: '上海' }, { name: '九寨沟风景区' }],
+                                [{ name: '上海' }, { name: '桂林漓江风景名胜区' }],
+                                [{ name: '上海' }, { name: '敦煌机场' }],
+                                [{ name: '上海' }, { name: '喀纳斯景区' }],
+                                [{ name: '上海' }, { name: '天山乡' }],
+                                [{ name: '上海' }, { name: '伊犁哈萨克自治州' }],
+                                [{ name: '上海' }, { name: '拉萨布达拉宫广场' }],
+                                [{ name: '上海' }, { name: '张家界国家森林公园' }]
+                            ]
+                        },
+                        markPoint: {
+                            symbol: 'emptyCircle',
+                            symbolSize: function (v) {
+                                return 10 + v / 10
+                            },
+                            effect: {
+                                show: true,
+                                shadowBlur: 0
+                            },
+                            itemStyle: {
+                                normal: {
+                                    label: { show: false }
+                                }
+                            },
+                            data: [
+                                { name: '蜈支洲岛' },
+                                { name: '九寨沟风景区' },
+                                { name: '桂林漓江风景名胜区' },
+                                { name: '敦煌机场' },
+                                { name: '喀纳斯景区' },
+                                { name: '天山乡' },
+                                { name: '伊犁哈萨克自治州' },
+                                { name: '拉萨布达拉宫广场' },
+                                { name: '张家界国家森林公园' }
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            if (myChart && myChart.dispose) {
+                myChart.dispose();
+            }
+            var myChart = BMapExt.initECharts(container, theme);
+            window.onresize = myChart.resize;
+            BMapExt.setOption(option, true)
+        }
+    </script>
+}
+<div id="main-charts"></div>
